@@ -25,6 +25,7 @@ High-Level Architecture
 
 The pipeline follows the Medallion Architecture, separating concerns across ingestion, processing, and decision layers.
 
+```mermaid
 graph TD
     subgraph "Bronze (Ingestion)"
         A[Raw Clickstream Events] --> B[Spark Structured Streaming]
@@ -38,16 +39,19 @@ graph TD
     end
 
     subgraph "Gold (Intelligence)"
-        F --> G[Scoring Engine]
-        G --> H[Logistic Regression]
-        H --> I[Intent Score (0–1)]
-        I --> J{Decision Rules}
-        J -->|High| K[PUSH_DISCOUNT]
-        J -->|Medium| L[EMAIL_NUDGE]
-        J -->|Low| M[LOG_ONLY]
+    F --> G[Scoring Engine]
+    G --> H[Logistic Regression]
+    H --> I[Intent Score 0-1]
+    I --> J{Decision Rules}
+    J -->|High| K[PUSH_DISCOUNT]
+    J -->|Medium| L[EMAIL_NUDGE]
+    J -->|Low| M[LOG_ONLY]
     end
 
     K & L & M --> N[(Gold Delta Table)]
+``` 
+
+## Key Engineering Challenges & Solutions
 
 Key Engineering Challenges & Solutions
 1. Preventing Data Leakage (“Honest” Modeling)
@@ -139,26 +143,27 @@ Apache Spark 3.5
 
 Delta Lake 3.0
 
-Run Order
+### Run Order
 
-1. Reset environment
+1. **Reset Environment**
+   ```bash
+   python src/00_reset_lakehouse.py
+   ```
 
-python src/00_reset_lakehouse.py
+2. **Train Models**
+   ```bash
+   python src/02_train_model.py
+   ```
 
+3. **Start Streaming Engine**
+   ```bash
+   python src/03_lakehouse_pipeline.py
+   ```
 
-2. Train models
-
-python src/02_train_model.py
-
-
-3. Start streaming engine
-
-python src/03_lakehouse_pipeline.py
-
-
-4. Generate live traffic
-
-python src/01_stream_generator.py
+4. **Generate Live Traffic**
+   ```bash
+   python src/01_stream_generator.py
+   ```
 
 Design Trade-offs & Future Work
 
