@@ -1,4 +1,4 @@
-Real-Time Behavioural Intent Scoring Engine
+## Real-Time Behavioural Intent Scoring Engine
 
 A real-time streaming system that identifies high-intent e-commerce users and triggers immediate actions (discounts, email nudges) based on live behavioural signals. The pipeline processes clickstream data as it arrives, applies offline-trained machine learning models in the stream, and produces actionable decisions within seconds.
 
@@ -165,7 +165,7 @@ Delta Lake 3.0
    python src/01_stream_generator.py
    ```
 
-Design Trade-offs & Future Work
+## Design Trade-offs & Future Work
 
 Logistic Regression was chosen for interpretability, calibration stability, and low inference cost in streaming environments.
 
